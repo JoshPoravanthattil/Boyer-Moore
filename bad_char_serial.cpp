@@ -1,6 +1,7 @@
 /* C++ Program for Bad Character Heuristic of Boyer
 Moore String Matching Algorithm */
 #include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
 # define NO_OF_CHARS 256
  
@@ -74,6 +75,8 @@ void search( string txt, string pat)
             is on the right side of the current
             character. */
             s += max(1, j - badchar[txt[s + j]]);
+            cout << j - badchar[txt[s + j]] << "\n";
+
     }
 }
  
