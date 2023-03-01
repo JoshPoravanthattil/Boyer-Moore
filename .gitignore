@@ -1,2 +1,4 @@
 a.out
 .vscode/
+*.Identifier
+output.txt

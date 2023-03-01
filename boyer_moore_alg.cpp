@@ -5,15 +5,18 @@
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
+#include<fstream>
 using namespace std;
+
 # define NO_OF_CHARS 256
+long length = 0;
   
 // preprocessing for strong good suffix rule
-void preprocess_strong_suffix(int *shift, int *bpos,
-                                char *pat, int m)
+void preprocess_strong_suffix(long *shift, long *bpos,
+                                char *pat, long m)
 {
     // m is the length of pattern 
-    int i=m, j=m+1;
+    long i=m, j=m+1;
     bpos[i]=j;
   
     while(i>0)
@@ -41,10 +44,10 @@ void preprocess_strong_suffix(int *shift, int *bpos,
 }
   
 //Preprocessing for case 2
-void preprocess_case2(int *shift, int *bpos,
-                      char *pat, int m)
+void preprocess_case2(long *shift, long *bpos,
+                      char *pat, long m)
 {
-    int i, j;
+    long i, j;
     j = bpos[0];
     for(i=0; i<=m; i++)
     {
@@ -62,8 +65,8 @@ void preprocess_case2(int *shift, int *bpos,
   
 // The preprocessing function for Boyer Moore's
 // bad character heuristic
-void badCharHeuristic( char *str, int size,
-                        int badchar[NO_OF_CHARS])
+void badCharHeuristic( char *str, long size,
+                        long badchar[NO_OF_CHARS])
 {
     int i;
  
@@ -82,14 +85,15 @@ void badCharHeuristic( char *str, int size,
 void search(char *text, char *pat)
 {
     // s is shift of the pattern with respect to text
-    int s=0, j;
-    int m = strlen(pat);
-    int n = strlen(text);
-    int badchar[NO_OF_CHARS];
-    int bpos[m+1], shift[m+1];
+    long s=0, j;
+    long m = strlen(pat);
+    long n = strlen(text);
+    cout << "M " << m << " " << "N " << n << endl;
+    long badchar[NO_OF_CHARS];
+    long bpos[m+1], shift[m+1];
   
     //initialize all occurrence of shift to 0
-    for(int i=0;i<m+1;i++) {
+    for(long i=0;i<m+1;i++) {
         shift[i]=0;
     } 
   
@@ -100,7 +104,8 @@ void search(char *text, char *pat)
     badCharHeuristic(pat, m, badchar);
     preprocess_strong_suffix(shift, bpos, pat, m);
     preprocess_case2(shift, bpos, pat, m);
-  
+    
+    long z = 1;
     while(s <= n-m)
     {
   
@@ -115,25 +120,55 @@ void search(char *text, char *pat)
              will become -1 after the above loop */
         if (j<0)
         {
-            printf("pattern occurs at shift = %d\n", s);
+            printf("pattern occurs at shift = %ld\n", s);
             s += shift[0];
         }
         else
             /*pat[i] != pat[s+j] so shift the pattern
               shift[j+1] times  */
             // s += shift[j+1];
-            s += max(1, max(j - badchar[text[s + j]], shift[j+1]));
+            s += max(z, max(j - badchar[text[s + j]], shift[j+1]));
             // cout << "Values: " << 1 << " " << j - badchar[text[s + j]] << " " << shift[j+1] << "\n";
             // cout << "Max: " << max(1, max(j - badchar[text[s + j]], shift[j+1])) << "\n";
     }
-  
+    cout << pat[0] << " " << text[0];
 }
-  
+
+char* readInput(string fname) {
+    const char* fname2 = fname.c_str();
+    FILE *f = fopen(fname2, "r");
+    char* buffer;
+
+    if (f) {
+        fseek(f, 0, SEEK_END);
+        length = ftell(f);
+        fseek(f, 0, SEEK_SET);
+        buffer = (char *)malloc( sizeof(char) * ( length + 1 ) );
+        
+        if(buffer) {
+            fread(buffer, sizeof(char), length, f);
+        }
+        fclose(f);
+    }
+    buffer[length] = '\0';
+    cout << "The length of the text is " << length << endl;
+    return buffer;
+}
+
 //Driver 
 int main()
 {
-    char text[] = "2384792834792837492837492834792478294783ABAAAABAACD23948729834792837492834792837492874928374";
-    char pat[] = "ABA";
+    // char text[] = "ABAAAABAACD";
+    char pat[] = "CCCCCCCCCCCCCCCCCCCCCCCCCCC";
+    string fname = "output.txt";
+
+    // Reading in file and calculating length
+    cout << endl << "Reading in file ..." << endl;
+    char *text = readInput(fname);
+    cout << endl << "Successfully Read in File!" << endl;
+
+    // cout << fart[2394823948] << " " << fart[1234243242] << " " << fart[10234234] << endl;
     search(text, pat);
+    cout << endl << "Search completed!" << endl;
     return 0;
 }
