@@ -167,7 +167,28 @@ int main()
     char *text = readInput(fname);
     cout << endl << "Successfully Read in File!" << endl;
 
-    // cout << fart[2394823948] << " " << fart[1234243242] << " " << fart[10234234] << endl;
+    // Loops for extracting sequences
+    long offset = 10000;
+    int i = 0;
+    cout << endl <<"START STRING" << endl;
+    while (i < 10) {
+        printf("%c", text[offset + i]);
+        i++;
+    }
+    i = 0;
+    cout << endl << "MIDDLE STRING" << endl;
+    while (i < 10) {
+        printf("%c", text[(long)(length/2) + i]);
+        i++;
+    }
+    i = 0;
+    cout << endl << "END STRING" << endl;
+    while (i < 10) {
+        printf("%c", text[length-10 + i]);
+        i++;
+    }
+    cout << endl << endl;
+    // Call Search Function
     search(text, pat);
     cout << endl << "Search completed!" << endl;
     return 0;
